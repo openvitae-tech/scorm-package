@@ -14,6 +14,7 @@ gem "rubocop", "~> 1.21"
 gem "rubyzip"
 
 group :development, :test do
+  gem "brakeman"
   gem "nokogiri", "~> 1.18"
   gem "pry-byebug"
 end
