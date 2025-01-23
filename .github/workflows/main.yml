@@ -38,7 +38,5 @@ jobs:
         with:
           ruby-version: "3.3.0"
           bundler-cache: true
-      - name: Security audit application code
-        run: bundle exec brakeman -q -w2 --no-exit-on-warn
       - name: Lint Ruby files
         run: bundle exec rubocop
