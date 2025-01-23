@@ -91,76 +91,36 @@ module ScormPackage
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <script src="../../scormfunctions.js" type="text/javascript"></script>
+            <script src="../../scormfunctions.js"></script>
             <title>#{lesson.title}</title>
             <style>
-              #loader {
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 20px;
-                color: #555;
-              }
-
-              iframe {
-                display: none;
-                width: 560px;
-                height: 315px;
-                border: none;
-              }
+              .loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+              iframe { display: none; width: 560px; height: 315px; border: none; }
             </style>
           </head>
           <body>
             <p>Lesson: #{lesson.title}</p>
-            <ul>
-              #{lesson.videos.map do |video|
-                <<-LI
-                <li>
-                  Language: #{video[:language]}<br>
-                  <div id="loader-#{video[:id]}">Loading...</div>
-                  <iframe
-                    id="custom-iframe-#{video[:id]}"
-                    data-video-url="#{video[:video_url]}"
-                  ></iframe>
-                </li>
-                LI
-              end.join("\n")}
-            </ul>
-
+            <ul>#{lesson.videos.map do |video|
+              "<li>Language: #{video[:language]}<br>" \
+              "<div id=\"loader-#{video[:id]}\" class=\"loader\">Loading...</div>" \
+              "<iframe id=\"custom-iframe-#{video[:id]}\" data-video-url=\"#{video[:video_url]}\"></iframe></li>"
+            end.join}</ul>
             <script>
-              const loadIframeWithHeaders = async (iframe, loader) => {
+              const loadIframe = async (iframe) => {
+                const loader = document.getElementById(`loader-${iframe.id.split('-').pop()}`);
                 try {
-                  loader.style.display = "block";
-                  const videoUrl = iframe.getAttribute("data-video-url");
-
-                  const response = await fetch(videoUrl, {
-                    headers: { "X-Scorm-Token": "#{scorm_token}" },
+                  loader.style.display = 'block';
+                  const response = await fetch(iframe.dataset.videoUrl, {
+                    headers: { 'X-Scorm-Token': '#{scorm_token}' }
                   });
-
-                  if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.statusText}`);
-                  }
-
-                  const html = await response.text();
-                  iframe.srcdoc = html;
-                  iframe.style.display = "block";
-                } catch (error) {
-                  console.error("Error loading iframe:", error);
-                } finally {
-                  loader.style.display = "none";
-                }
+                  iframe.srcdoc = await response.text();
+                  iframe.style.display = 'block';
+                } catch (error) { console.error(error); }
+                finally { loader.style.display = 'none'; }
               };
-
-              window.addEventListener("load", () => {
-                const iframes = document.querySelectorAll("iframe[data-video-url]");
-                iframes.forEach((iframe) => {
-                  const loaderId = `loader-${iframe.id.split("-").pop()}`;
-                  const loader = document.getElementById(loaderId);
-                  loadIframeWithHeaders(iframe, loader);
-                });
-              });
+              window.addEventListener('load', () =>
+                document.querySelectorAll('iframe[data-video-url]').forEach(loadIframe)
+              );
             </script>
           </body>
           </html>
