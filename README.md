@@ -1,1 +1,1 @@
-# ScormPackage
+# Scorm Packaging gem
