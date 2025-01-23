@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "scorm_package"
+require "pry-byebug"
+require "nokogiri"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

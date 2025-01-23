@@ -10,3 +10,10 @@ gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 
 gem "rubocop", "~> 1.21"
+
+gem "rubyzip"
+
+group :development, :test do
+  gem "nokogiri", "~> 1.18"
+  gem "pry-byebug"
+end
