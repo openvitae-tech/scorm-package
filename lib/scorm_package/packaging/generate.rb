@@ -119,24 +119,25 @@ module ScormPackage
                 <<-LI
                 <li>
                   Language: #{video[:language]}<br>
-                  <div id="loader">Loading...</div>
-                  <iframe id="custom-iframe" data-video-id="#{video[:id]}"></iframe>
+                  <div id="loader-#{video[:id]}">Loading...</div>
+                  <iframe
+                    id="custom-iframe-#{video[:id]}"
+                    data-video-url="#{video[:video_url]}"
+                  ></iframe>
                 </li>
                 LI
               end.join("\n")}
             </ul>
 
             <script>
-              const loadIframeWithHeaders = async (videoId, iframe, loader) => {
+              const loadIframeWithHeaders = async (iframe, loader) => {
                 try {
                   loader.style.display = "block";
+                  const videoUrl = iframe.getAttribute("data-video-url");
 
-                  const response = await fetch(
-                    `https://app.instruo.co/embeds/videos/${videoId}`,
-                    {
-                      headers: { "X-Scorm-Token":  "#{scorm_token}" },
-                    }
-                  );
+                  const response = await fetch(videoUrl, {
+                    headers: { "X-Scorm-Token": "#{scorm_token}" },
+                  });
 
                   if (!response.ok) {
                     throw new Error(`Failed to fetch: ${response.statusText}`);
@@ -153,11 +154,11 @@ module ScormPackage
               };
 
               window.addEventListener("load", () => {
-                const iframes = document.querySelectorAll("#custom-iframe");
+                const iframes = document.querySelectorAll("iframe[data-video-url]");
                 iframes.forEach((iframe) => {
-                  const videoId = iframe.getAttribute("data-video-id");
-                  const loader = iframe.previousElementSibling;
-                  loadIframeWithHeaders(videoId, iframe, loader);
+                  const loaderId = `loader-${iframe.id.split("-").pop()}`;
+                  const loader = document.getElementById(loaderId);
+                  loadIframeWithHeaders(iframe, loader);
                 });
               });
             </script>
