@@ -10,12 +10,9 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Gem to create scorm package."
   # spec.description = "TODO: Write a longer description or delete this line."
-  spec.homepage = "https://app.instruo.co"
+  spec.homepage = "https://github.com/openvitae-tech/scorm-package"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
-
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
-
   spec.metadata["homepage_uri"] = spec.homepage
 
   # Specify which files should be added to the gem when it is released.
