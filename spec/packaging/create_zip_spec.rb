@@ -11,12 +11,14 @@ RSpec.describe ScormPackage::Packaging::CreateZip do
 
   describe "#create_zip_package" do
     it "creates a zip file" do
-      zip_creator = described_class.new(mock_manifest, mock_lessons)
-      expect(Zip::File).to receive(:open).with("scorm.zip", Zip::File::CREATE).and_call_original
-      zip_creator.process
+      zip_creator = described_class.new(mock_manifest, mock_lessons).process
 
-      expect(File.exist?("scorm.zip")).to be true
-      File.delete("scorm.zip") if File.exist?("scorm.zip")
+      Zip::File.open_buffer(zip_creator) do |zip_file|
+        expect(zip_file.find_entry("imsmanifest.xml")).not_to be_nil
+
+        manifest_entry = zip_file.read("imsmanifest.xml")
+        expect(manifest_entry).to eq(mock_manifest)
+      end
     end
   end
 end
