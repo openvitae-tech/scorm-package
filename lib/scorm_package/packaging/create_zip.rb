@@ -29,27 +29,31 @@ module ScormPackage
       private
 
       def create_zip_package
-        Zip::File.open("scorm.zip", Zip::File::CREATE) do |zipfile|
+        buffer = Zip::OutputStream.write_buffer do |zipfile|
           add_manifest(zipfile)
           add_source_files(zipfile)
           add_lesson_files(zipfile)
         end
+        buffer.string
       end
 
       def add_manifest(zipfile)
-        zipfile.get_output_stream("imsmanifest.xml") { |f| f.write(manifest) }
+        zipfile.put_next_entry("imsmanifest.xml")
+        zipfile.write(manifest)
       end
 
       def add_source_files(zipfile)
         SCHEMA_FILES.each do |file|
           filename = File.basename(file)
-          zipfile.add(filename, file)
+          zipfile.put_next_entry(filename)
+          zipfile.write(File.read(file))
         end
       end
 
       def add_lesson_files(zipfile)
         lessons.each do |lesson_path, lesson_content|
-          zipfile.get_output_stream(lesson_path) { |f| f.write(lesson_content) }
+          zipfile.put_next_entry(lesson_path)
+          zipfile.write(lesson_content)
         end
       end
     end
