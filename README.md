@@ -10,7 +10,7 @@
       gem build scorm_package
    ```
 
-2. Add this line to your application's Gemfile:
+2. Add this line to your host application's Gemfile:
 
    ```ruby
     # ..existing gems
