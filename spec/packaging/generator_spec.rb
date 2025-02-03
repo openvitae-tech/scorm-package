@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ScormPackage::Packaging::Generate do
+RSpec.describe ScormPackage::Packaging::Generator do
   let(:lesson_videos) do
     [
       { id: 1, language: "English", video_url: "https://example.com/video1" },

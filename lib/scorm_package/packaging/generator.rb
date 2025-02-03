@@ -4,7 +4,7 @@ require_relative "create_zip"
 
 module ScormPackage
   module Packaging
-    class Generate
+    class Generator
       attr_reader :course, :scorm_token
 
       def initialize(course, scorm_token)
@@ -12,7 +12,7 @@ module ScormPackage
         @scorm_token = scorm_token
       end
 
-      def process
+      def generate
         manifest = generate_manifest
         lessons_html = generate_lesson_contents
         ScormPackage::Packaging::CreateZip.new(manifest, lessons_html).process
