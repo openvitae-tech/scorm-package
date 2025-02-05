@@ -101,9 +101,9 @@ module ScormPackage
           <body>
             <p>Lesson: #{lesson.title}</p>
             <ul>#{lesson.videos.map do |video|
-              "<li>Language: #{video[:language]}<br>" \
-              "<div id=\"loader-#{video[:id]}\" class=\"loader\">Loading...</div>" \
-              "<iframe id=\"custom-iframe-#{video[:id]}\" data-video-url=\"#{video[:video_url]}\"></iframe></li>"
+              "<li>Language: #{video.language}<br>" \
+              "<div id=\"loader-#{video.id}\" class=\"loader\">Loading...</div>" \
+              "<iframe id=\"custom-iframe-#{video.id}\" data-video-url=\"#{video.video_url}\"></iframe></li>"
             end.join}</ul>
             <script>
               const loadIframe = async (iframe) => {
