@@ -1,6 +1,6 @@
 # Scorm Packaging gem
 
-## Local development with Host Application
+## Local development with the Host Application
 
 ### Installation
 
