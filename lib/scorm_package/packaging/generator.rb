@@ -84,6 +84,18 @@ module ScormPackage
         end.join
       end
 
+      def generate_lesson_contents
+        lessons_hash = {}
+
+        course.course_modules.each_with_index do |mod, mod_index|
+          mod.lessons.each_with_index do |lesson, lesson_index|
+            lesson_path = "content/module#{mod_index + 1}/lesson#{lesson_index + 1}.html"
+            lessons_hash[lesson_path] = generate_lesson_html(lesson)
+          end
+        end
+        lessons_hash
+      end
+
       def generate_lesson_html(lesson)
         <<~HTML
           <!DOCTYPE html>
@@ -125,18 +137,6 @@ module ScormPackage
           </body>
           </html>
         HTML
-      end
-
-      def generate_lesson_contents
-        lessons_hash = {}
-
-        course.course_modules.each_with_index do |mod, mod_index|
-          mod.lessons.each_with_index do |lesson, lesson_index|
-            lesson_path = "content/module#{mod_index + 1}/lesson#{lesson_index + 1}.html"
-            lessons_hash[lesson_path] = generate_lesson_html(lesson)
-          end
-        end
-        lessons_hash
       end
     end
   end
