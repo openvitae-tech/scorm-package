@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scorm-package (0.1.1)
+    scorm-package (0.1.2)
 
 GEM
   remote: https://rubygems.org/
