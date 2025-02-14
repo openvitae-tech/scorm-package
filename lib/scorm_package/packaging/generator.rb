@@ -5,11 +5,10 @@ require_relative "create_zip"
 module ScormPackage
   module Packaging
     class Generator
-      attr_reader :course, :scorm_token
+      attr_reader :course
 
-      def initialize(course, scorm_token)
+      def initialize(course)
         @course = course
-        @scorm_token = scorm_token
       end
 
       def generate
@@ -106,33 +105,25 @@ module ScormPackage
             <script src="../../scormfunctions.js"></script>
             <title>#{lesson.title}</title>
             <style>
-              .loader { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+              .loader { display: block; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
               iframe { display: none; width: 560px; height: 315px; border: none; }
             </style>
           </head>
           <body>
             <p>Lesson: #{lesson.title}</p>
-            <ul>#{lesson.videos.map do |video|
-              "<li>Language: #{video.language}<br>" \
-              "<div id=\"loader-#{video.id}\" class=\"loader\">Loading...</div>" \
-              "<iframe id=\"custom-iframe-#{video.id}\" data-video-url=\"#{video.video_url}\"></iframe></li>"
-            end.join}</ul>
+            <ul>
+              #{lesson.videos.map do |video|
+                "<li>Language: #{video.language}<br>" \
+                "<div id=\"loader-#{video.id}\" class=\"loader\">Loading...</div>" \
+                "<iframe id=\"iframe-#{video.id}\" src=\"#{video.video_url}\" onload=\"hideLoader('#{video.id}')\"></iframe></li>"
+              end.join}
+            </ul>
+
             <script>
-              const loadIframe = async (iframe) => {
-                const loader = document.getElementById(`loader-${iframe.id.split('-').pop()}`);
-                try {
-                  loader.style.display = 'block';
-                  const response = await fetch(iframe.dataset.videoUrl, {
-                    headers: { 'X-Scorm-Token': '#{scorm_token}' }
-                  });
-                  iframe.srcdoc = await response.text();
-                  iframe.style.display = 'block';
-                } catch (error) { console.error(error); }
-                finally { loader.style.display = 'none'; }
-              };
-              window.addEventListener('load', () =>
-                document.querySelectorAll('iframe[data-video-url]').forEach(loadIframe)
-              );
+              function hideLoader(videoId) {
+                document.getElementById('loader-' + videoId).style.display = 'none';
+                document.getElementById('iframe-' + videoId).style.display = 'block';
+              }
             </script>
           </body>
           </html>

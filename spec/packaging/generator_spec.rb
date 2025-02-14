@@ -26,7 +26,7 @@ RSpec.describe ScormPackage::Packaging::Generator do
     double("Course", title: "Test Course", course_modules: modules)
   end
 
-  subject { described_class.new(course, "123456789") }
+  subject { described_class.new(course) }
 
   describe "#generate_manifest" do
     it "generates a valid SCORM manifest XML" do
